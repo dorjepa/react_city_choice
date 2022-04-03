@@ -1,38 +1,36 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    background-color: steelblue;
+  background-color: steelblue;
 }
 
 #root {
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .App {
-    width: 800px;
-
-    background-color: darkgray;
-    border: 1px solid darkgray;
+  width: 800px;
+  background-color: darkgray;
+  border: 1px solid darkgray;
 }
 
 h1 {
-    font-family: Verdana;
-    font-size: 2rem;
-    color: #333;
-    margin: 20px 0;
+  font-family: Verdana;
+  font-size: 2rem;
+  color: #00f;
+  margin: 20px 0;
 }
 
-searchQuery {
-    color: red;
-}
 .error {
-    background-color: burlywood;
-    color: red;
-    padding: 2px 6px;
+  background-color: burlywood;
+  color: red;
+  padding: 2px 6px;
 }
+
+/*# sourceMappingURL=App.css.map */

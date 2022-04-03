@@ -1,8 +1,6 @@
 import React, {useRef, useState} from 'react';
-import './styles/App.css';
-import MyInput from "./components/UI/input/MyInput";
-import axios from 'axios';
-import CityChoice from "./components/CityChoice";
+import './styles/App.sass';
+import CityChoice from "./components/CityChoice.jsx";
 
 function App() {
 

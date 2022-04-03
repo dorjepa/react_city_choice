@@ -1,9 +1,7 @@
 import React, {useState, useMemo, useEffect, useRef} from 'react';
-// import React, {useMemo} from 'react';
-import axios from "axios";
-import MyInput from "./UI/input/MyInput";
-import './../styles/CityChoice.css';
-import CitiesList from "./CitiesList";
+import MyInput from "./UI/input/MyInput.jsx";
+import './../styles/CityChoice.sass';
+import CitiesList from "./CitiesList.jsx";
 
 
 const CityChoice = () => {
@@ -30,7 +28,7 @@ const CityChoice = () => {
                         onChange={e => {
                             setSearchQuery(e.target.value);
                         }}
-                        placeholder="Город"
+                        placeholder="Начните с первой буквы"
                     />
                 </div>
 

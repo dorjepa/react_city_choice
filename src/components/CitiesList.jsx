@@ -1,6 +1,5 @@
 import React, {useEffect, useMemo, useState} from 'react';
-// import CitiesService from "./API/CitiesService";
-import DataServiceClass from "./API/DataServiceClass";
+import DataServiceClass from "./API/DataServiceClass.jsx";
 
 const CitiesList = (props) => {
 
@@ -11,6 +10,7 @@ const CitiesList = (props) => {
     useEffect( () => {
         if (props.searchQuery.searchQuery.length == 0) {
             setCitiesList([])
+            setIsCitiesLoading(true)
         }
     }, [props.searchQuery.searchQuery])
 
@@ -25,16 +25,16 @@ const CitiesList = (props) => {
 
     let getCitiesList = []
         // setIsCitiesLoading(true)
-    async function fetchCities(searchQuery) {
+    async function fetchCities() {
         // setIsCitiesLoading(true)
 
-        getCitiesList = await DataServiceClass.getCities(fias.url)
-        // setIsCitiesLoading(false)
+        getCitiesList = await DataServiceClass.getAll(fias.url)
         // console.log('fias.url: ', fias.url)
         // console.dir(citiesList)
         if (getCitiesList) {
             setCitiesList(getCitiesList)
         }
+        setIsCitiesLoading(false)
     }
 
     let citiesData = citiesList
@@ -46,12 +46,13 @@ const CitiesList = (props) => {
     const  citiesNames = citiesData.result ? citiesData.result.filter(el => el.id != 'Free').map(el => el.name) : [];
     // console.dir(citiesNames);
 
-    // const [showCitiesList, setShowCitiesList] = useState(false)
-    // const [listClassName, setListClassName] = useState('cityChoice__list')
-
     // Если в строке поиска ввели первую букву, то загружаем массив городов
     if (props.searchQuery.searchQuery.length === 1 && citiesData.length == 0) {
-        fetchCities(props.searchQuery.searchQuery)
+
+        setTimeout(() => { // Для примера долгой загрузки
+            fetchCities(props.searchQuery.searchQuery)
+        }, 2000);
+
     }
     const searchedCities = useMemo( () => {
         // console.log('props.searchQuery: ', props.searchQuery.searchQuery)
@@ -73,11 +74,6 @@ const CitiesList = (props) => {
         }
     })
 
-    const markSearchSubstring = (str) => {
-        // return str.replace(searchQuery, '<strong dangerouslySetInnerHTML={{__html: searchQuery}} />');
-        return str.replace(props.searchQuery.searchQuery, '<strong>' + props.searchQuery.searchQuery + '</strong>');
-    }
-
     const searchSubstringBefore = (str) => {
         if (props.searchQuery.searchQuery == '') {
             return str
@@ -96,7 +92,7 @@ const CitiesList = (props) => {
     }
 
     // Сохраняем регистр подстроки, совпадающей с поисковым запросом
-    const searchSubstr = (str) => {
+    const searchSubstring = (str) => {
         if (props.searchQuery.searchQuery == '') {
             return ''
         }
@@ -121,11 +117,9 @@ const CitiesList = (props) => {
         // console.log('showCitiesList: ', showCitiesList)
         // console.log('searchQuery: ', props.searchQuery.searchQuery)
         if (props.searchQuery.searchQuery == '' || !show){
-            // console.log('cityChoice__list')
             return 'cityChoice__list'
         }
         else {
-            // console.log('cityChoice__list  cityChoice__list_active')
             return 'cityChoice__list cityChoice__list_active'
         }
 
@@ -144,35 +138,32 @@ const CitiesList = (props) => {
 
             <ul className={listClassName(true)}>
                 {
-                    !filterCities.length
-                    ? <li className={"error"} onClick={cityReady.bind('')}>
-                            Нет такого города
-                    </li>
-                    : ''
+                    isCitiesLoading
+                    ?
+                        <li className={"cityChoice__item cityChoice__item_load"}>Ищем...</li>
+                    :
+                        !filterCities.length
+                            ?
+                                <li className={"error"} onClick={cityReady.bind('')}>
+                                    Нет такого города
+                                </li>
+                            :
+                                searchedCities.map((el, index) =>
+                                    // filterCities.map((el, index) =>
+                                    <li
+                                        key={index}
+                                        // key={el.id} // В объекте id не уникальны
+                                        onClick={cityReady.bind(el)}
+                                        className={"cityChoice__item"}
+                                    >
+                                        {searchSubstringBefore(el)}
+                                        <span className={"cityChoice__search"}>
+                                            {searchSubstring(el)}
+                                        </span>
+                                        {searchSubstringAfter(el)}
 
-                }
-                {
-                    // isCitiesLoading
-                    // ? <li>Идёт загрузка...</li>
-                    // :
-                    searchedCities.map((el, index) =>
-                        // filterCities.map((el, index) =>
-                        <li
-                            key={index}
-                            // key={el.id} // В объекте id не уникальны
-                            onClick={cityReady.bind(el)}
-                            className={"cityChoice__item"}
-                        >
-                            {/*{el.replace(searchQuery, '<strong>' + searchQuery + '</strong>')}*/}
-                            {/*{markSearchSubstring(el)}*/}
-                            {searchSubstringBefore(el)}
-                            <span className={"cityChoice__search"}>
-                                        {searchSubstr(el)}
-                                    </span>
-                            {searchSubstringAfter(el)}
-
-                        </li>
-                    )
+                                    </li>
+                                )
                 }
             </ul>
         </div>
